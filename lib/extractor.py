@@ -17,13 +17,13 @@ def unpack_obb(zipfile: ZipFile, target: Path) -> None:
   print(f"Unpacking {length} files")
 
   for index, file in enumerate(zfiles, start=1):
-    path = target / file.filename
+    path = Path(file.filename)
 
     if not path.is_relative_to('assets'):
       print(path, "is not relative to assets")
       continue
 
-    dest = Path(path.relative_to('assets'))
+    dest = Path(target, path.relative_to('assets'))
     dest.parent.mkdir(parents=True, exist_ok=True)
 
     # remove .ys suffix
