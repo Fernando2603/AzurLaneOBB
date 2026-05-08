@@ -25,24 +25,14 @@ class Downloader:
 
 
   def get_package(self) -> Package:
-    detail = self.page.find('div', class_='detail_banner')
+    detail = self.page.find('a', class_='dt-main-download-btn')
 
     if not isinstance(detail, Tag):
       raise ValueError('ERROR: expected type for detail is Tag')
 
-    sdk = detail.find('p', class_='details_sdk')
-
-    if not isinstance(sdk, Tag):
-      raise ValueError('ERROR: expected type for sdk is Tag')
-
-    version = sdk.contents[1].get_text(strip=True)
-    apkdata = detail.find('a', class_='download_apk_news')
-
-    if not isinstance(apkdata, Tag):
-      raise ValueError('ERROR: expected type for apkdata is Tag')
-
-    package_name = apkdata.get('data-dt-package_name') or 'com.YoStarEN.AzurLane'
-    version_code = apkdata.get('data-dt-version_code') or ''
+    package_name = detail.get('data-dt-package_name') or 'com.YoStarEN.AzurLane'
+    version_code = detail.get('data-dt-version_code') or ''
+    version = detail.get('data-dt-version') or ''
     download = f"https://d.apkpure.com/b/XAPK/{package_name}?versionCode={version_code}"
 
     return Package(version=version, download=download)
